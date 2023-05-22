@@ -2,6 +2,7 @@ package com.esi.adviserservice.service;
 
 
 import com.esi.adviserservice.dto.RPLRequestDto;
+import com.esi.adviserservice.dto.RPLRequestStatus;
 import com.esi.adviserservice.model.RPLAdvisor;
 import com.esi.adviserservice.repository.RPLAdvisorRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,10 @@ public class RPLAdvisorService {
 
     @KafkaListener(topics = "StdRequestSubmitted", groupId = "requestSubmittedEventGroup")
     public void updateRPLResponse(RPLRequestDto rPLRequestDto) {
-        log.info("Received message from topic StdRequestSubmitted: {}", rPLRequestDto);
-        RPLAdvisorRepository.save(mapRequestsDtoToRPL(rPLRequestDto));
+        rPLRequestDto.setRPLRequestStatus(RPLRequestStatus.UnderReview);
+        RPLAdvisor rplAdvisor = mapRequestsDtoToRPL(rPLRequestDto);
+        RPLAdvisorRepository.save(rplAdvisor);
+        log.info("Save to database: {}", rplAdvisor);
     }
 
     private RPLAdvisor mapRequestsDtoToRPL(RPLRequestDto rPLRequestdto) {
