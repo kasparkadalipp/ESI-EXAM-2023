@@ -3,6 +3,7 @@ package com.esi.studentservice.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import com.esi.studentservice.repository.RPLRequestRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RPLRequestService {
@@ -19,9 +21,9 @@ public class RPLRequestService {
     @Autowired
     private RPLRequestRepository RPLRequestRepository;
 
-    public   List<RPLRequestDto> getAllRPLRequest(){
-        List<RPLRequest> rPLRequests =  new ArrayList<>();
-        RPLRequestRepository.findAll().forEach(rPLRequests::add);
+    public List<RPLRequestDto> getAllRPLRequest(){
+        List<RPLRequest> rPLRequests =  RPLRequestRepository.findAll();
+        log.info("GET request for all RPL requests, {} results", rPLRequests.size());
         return rPLRequests.stream().map(this::mapToRPLRequestsDto).toList();
     }    
         
