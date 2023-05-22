@@ -28,6 +28,8 @@ public class RPLAdvisorService {
     public void updateRPLResponse(RPLRequestDto rPLRequestDto) {
         rPLRequestDto.setRPLRequestStatus(RPLRequestStatus.UnderReview);
         RPLAdvisor rplAdvisor = mapRequestsDtoToRPL(rPLRequestDto);
+        RPLAdvisorRepository.save(rplAdvisor);
+        log.info("Save to database: {}", rplAdvisor);
     }
 
     private RPLAdvisor mapRequestsDtoToRPL(RPLRequestDto rPLRequestdto) {
