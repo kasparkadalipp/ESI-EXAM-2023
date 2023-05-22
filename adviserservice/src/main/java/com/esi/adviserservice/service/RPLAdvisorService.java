@@ -20,11 +20,14 @@ public class RPLAdvisorService {
     private RPLAdvisorRepository RPLAdvisorRepository;
 
     @KafkaListener(topics = "StdRequestSubmitted", groupId = "requestSubmittedEventGroup")
+    public void consumeRequestSubmit(RPLRequestDto rPLRequestDto){
+        log.info("Message from topic StdRequestSubmitted: {}", rPLRequestDto);
+        RPLAdvisorRepository.save(mapRequestsDtoToRPL(rPLRequestDto));
+    }
+
     public void updateRPLResponse(RPLRequestDto rPLRequestDto) {
         rPLRequestDto.setRPLRequestStatus(RPLRequestStatus.UnderReview);
         RPLAdvisor rplAdvisor = mapRequestsDtoToRPL(rPLRequestDto);
-        RPLAdvisorRepository.save(rplAdvisor);
-        log.info("Save to database: {}", rplAdvisor);
     }
 
     private RPLAdvisor mapRequestsDtoToRPL(RPLRequestDto rPLRequestdto) {
