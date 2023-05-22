@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RPLAdvisorService {
 
+    private final KafkaTemplate<String, RPLRequestDto> kafkaTemplate;
     @Autowired
     private RPLAdvisorRepository RPLAdvisorRepository;
 
@@ -30,6 +32,8 @@ public class RPLAdvisorService {
         RPLAdvisor rplAdvisor = mapRequestsDtoToRPL(rPLRequestDto);
         RPLAdvisorRepository.save(rplAdvisor);
         log.info("Save to database: {}", rplAdvisor);
+        kafkaTemplate.send("AdvResSubmitted", rPLRequestDto);
+        log.info("Send message to topic AdvResSubmitted: {}", rPLRequestDto);
     }
 
     private RPLAdvisor mapRequestsDtoToRPL(RPLRequestDto rPLRequestdto) {

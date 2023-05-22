@@ -7,6 +7,7 @@ import com.esi.studentservice.repository.RPLRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,13 @@ public class RPLRequestService {
     private final KafkaTemplate<String, RPLRequestDto> kafkaTemplate;
     @Autowired
     private RPLRequestRepository RPLRequestRepository;
+
+    @KafkaListener(topics = "AdvResSubmitted", groupId = "requestSubmittedEventGroup")
+    public void consumeAdvisorSubmit(RPLRequestDto rPLRequestDto) {
+        log.info("Message from topic AdvResSubmitted: {}", rPLRequestDto);
+        RPLRequestRepository.save(mapRequestsDtoToRPL(rPLRequestDto));
+        log.info("Update database value to underReview");
+    }
 
     public List<RPLRequestDto> getAllRPLRequest() {
         List<RPLRequest> rPLRequests = RPLRequestRepository.findAll();
