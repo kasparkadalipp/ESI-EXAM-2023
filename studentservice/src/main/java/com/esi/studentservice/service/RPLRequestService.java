@@ -2,6 +2,7 @@ package com.esi.studentservice.service;
 
 import com.esi.studentservice.dto.RPLRequestDto;
 import com.esi.studentservice.model.RPLRequest;
+import com.esi.studentservice.model.RPLRequestStatus;
 import com.esi.studentservice.repository.RPLRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,8 @@ public class RPLRequestService {
 
     public void addRPLRequest(RPLRequestDto rPLRequestDto) {
         RPLRequest rplRequest = mapRequestsDtoToRPL(rPLRequestDto);
+        rplRequest.setRPLRequestStatus(RPLRequestStatus.Submitted);
+        rPLRequestDto.setRPLRequestStatus(RPLRequestStatus.Submitted);
     }
 
     private RPLRequestDto mapToRPLRequestsDto(RPLRequest rPLRequest) {
