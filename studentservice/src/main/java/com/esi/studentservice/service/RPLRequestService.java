@@ -40,6 +40,8 @@ public class RPLRequestService {
                 .courseToSubstituteVolume(rPLRequest.getCourseToSubstituteVolume())
                 .courseToBeSubstitutedName(rPLRequest.getCourseToBeSubstitutedName())
                 .courseToBeSubstitutedCode(rPLRequest.getCourseToBeSubstitutedCode())
+                .advisoryDescription(rPLRequest.getAdvisoryDescription())
+                .rPLRequestStatus(rPLRequest.getRPLRequestStatus())
                 .build();
     }
 
@@ -52,6 +54,8 @@ public class RPLRequestService {
                 .courseToSubstituteVolume(rPLRequestdto.getCourseToSubstituteVolume())
                 .courseToBeSubstitutedName(rPLRequestdto.getCourseToBeSubstitutedName())
                 .courseToBeSubstitutedCode(rPLRequestdto.getCourseToBeSubstitutedCode())
+                .advisoryDescription(rPLRequestdto.getAdvisoryDescription())
+                .rPLRequestStatus(rPLRequestdto.getRPLRequestStatus())
                 .build();
     }
 }
