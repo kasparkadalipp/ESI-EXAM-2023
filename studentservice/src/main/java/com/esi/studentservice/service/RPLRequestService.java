@@ -29,6 +29,7 @@ public class RPLRequestService {
         RPLRequest rplRequest = mapRequestsDtoToRPL(rPLRequestDto);
         rplRequest.setRPLRequestStatus(RPLRequestStatus.Submitted);
         rPLRequestDto.setRPLRequestStatus(RPLRequestStatus.Submitted);
+        RPLRequestRepository.save(rplRequest);
     }
 
     private RPLRequestDto mapToRPLRequestsDto(RPLRequest rPLRequest) {
