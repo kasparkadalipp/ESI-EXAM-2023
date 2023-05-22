@@ -12,6 +12,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -36,6 +38,11 @@ public class RPLRequestService {
     }
 
     public void addRPLRequest(RPLRequestDto rPLRequestDto) {
+        Optional<RPLRequest> databaseEntry = RPLRequestRepository.findById(rPLRequestDto.getId());
+        if (databaseEntry.isPresent() && Set.of(RPLRequestStatus.UnderReview, RPLRequestStatus.Refused, RPLRequestStatus.Accepted).contains(databaseEntry.get().getRPLRequestStatus())) {
+            log.warn("Modifying application no longer allowed: {}", rPLRequestDto);
+            throw new IllegalArgumentException("Modifying application no longer allowed");
+        }
         rPLRequestDto.setRPLRequestStatus(RPLRequestStatus.Submitted);
         RPLRequest rplRequest = mapRequestsDtoToRPL(rPLRequestDto);
         RPLRequestRepository.save(rplRequest);
