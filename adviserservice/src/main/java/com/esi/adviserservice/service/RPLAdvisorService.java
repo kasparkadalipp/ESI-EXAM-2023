@@ -12,6 +12,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,10 @@ public class RPLAdvisorService {
     }
 
     public void updateRPLResponse(RPLRequestDto rPLRequestDto) {
+        if(RPLAdvisorRepository.findById(rPLRequestDto.getId()).isEmpty()){
+            log.warn("Attempt to update non-existing application: {}", rPLRequestDto);
+            throw new IllegalArgumentException("Invalid application id");
+        }
         rPLRequestDto.setRPLRequestStatus(RPLRequestStatus.UnderReview);
         RPLAdvisor rplAdvisor = mapRequestsDtoToRPL(rPLRequestDto);
         RPLAdvisorRepository.save(rplAdvisor);
