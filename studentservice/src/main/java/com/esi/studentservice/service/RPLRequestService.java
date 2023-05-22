@@ -7,6 +7,7 @@ import com.esi.studentservice.repository.RPLRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RPLRequestService {
 
+    private final KafkaTemplate<String, RPLRequestDto> kafkaTemplate;
     @Autowired
     private RPLRequestRepository RPLRequestRepository;
 
@@ -29,6 +31,9 @@ public class RPLRequestService {
         rPLRequestDto.setRPLRequestStatus(RPLRequestStatus.Submitted);
         RPLRequest rplRequest = mapRequestsDtoToRPL(rPLRequestDto);
         RPLRequestRepository.save(rplRequest);
+        log.info("Request saved to database");
+        kafkaTemplate.send("StdRequestSubmitted", rPLRequestDto);
+        log.info("Send StdRequestSubmitted: {}", rPLRequestDto);
     }
 
     private RPLRequestDto mapToRPLRequestsDto(RPLRequest rPLRequest) {
